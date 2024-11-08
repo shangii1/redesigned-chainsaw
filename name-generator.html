@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #87CEEB, #B0E2FF);
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+
+        .flower {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        #flower1 {
+            top: 20px;
+            right: 40px;
+        }
+
+        #flower2 {
+            bottom: 40px;
+            left: 30px;
+        }
+
+        #flower3 {
+            top: 50%;
+            right: 20%;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .history-panel {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .generator-panel {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 40px;
+            border-radius: 10px;
+            flex-grow: 1;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #2c5777;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #5f9ea0;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #4f8e90;
+            transform: scale(1.05);
+        }
+
+        #generatedName {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #2c5777;
+            font-weight: bold;
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 8px;
+            margin: 4px 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        .gender-select {
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #5f9ea0;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Flower decorations -->
+    <svg class="flower" id="flower1" width="50" height="50" viewBox="0 0 100 100">
+        <path d="M50 0 C60 20 80 20 100 30 C80 40 80 60 100 70 C80 80 60 80 50 100 C40 80 20 80 0 70 C20 60 20 40 0 30 C20 20 40 20 50 0" fill="#FFB6C1" />
+        <circle cx="50" cy="50" r="10" fill="#FFE4E1"/>
+    </svg>
+    <svg class="flower" id="flower2" width="40" height="40" viewBox="0 0 100 100">
+        <path d="M50 0 C60 20 80 20 100 30 C80 40 80 60 100 70 C80 80 60 80 50 100 C40 80 20 80 0 70 C20 60 20 40 0 30 C20 20 40 20 50 0" fill="#FFB6C1" />
+        <circle cx="50" cy="50" r="10" fill="#FFE4E1"/>
+    </svg>
+    <svg class="flower" id="flower3" width="30" height="30" viewBox="0 0 100 100">
+        <path d="M50 0 C60 20 80 20 100 30 C80 40 80 60 100 70 C80 80 60 80 50 100 C40 80 20 80 0 70 C20 60 20 40 0 30 C20 20 40 20 50 0" fill="#FFB6C1" />
+        <circle cx="50" cy="50" r="10" fill="#FFE4E1"/>
+    </svg>
+
+    <div class="container">
+        <div class="history-panel">
+            <h2>Name History</h2>
+            <ul class="history-list" id="historyList"></ul>
+        </div>
+
+        <div class="generator-panel">
+            <h1>Name Generator</h1>
+            <div class="gender-select">
+                <label for="gender">Select gender:</label>
+                <select id="gender">
+                    <option value="any">Any</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <button class="btn" onclick="generateName()">Generate Name</button>
+            <div id="generatedName"></div>
+        </div>
+    </div>
+
+    <script>
+        const maleNames = ['James', 'John', 'Robert', 'Michael', 'William', 'David', 'Richard', 'Joseph', 'Thomas', 'Charles'];
+        const femaleNames = ['Mary', 'Patricia', 'Jennifer', 'Linda', 'Elizabeth', 'Barbara', 'Susan', 'Jessica', 'Sarah', 'Karen'];
+        const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+
+        function generateName() {
+            const gender = document.getElementById('gender').value;
+            let firstName;
+            
+            if (gender === 'male') {
+                firstName = maleNames[Math.floor(Math.random() * maleNames.length)];
+            } else if (gender === 'female') {
+                firstName = femaleNames[Math.floor(Math.random() * femaleNames.length)];
+            } else {
+                const allNames = [...maleNames, ...femaleNames];
+                firstName = allNames[Math.floor(Math.random() * allNames.length)];
+            }
+            
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const fullName = `${firstName} ${lastName}`;
+            
+            document.getElementById('generatedName').textContent = fullName;
+            addToHistory(fullName);
+        }
+
+        function addToHistory(name) {
+            const historyList = document.getElementById('historyList');
+            const listItem = document.createElement('li');
+            listItem.className = 'history-item';
+            listItem.textContent = name;
+            
+            // Add new name at the top of the list
+            historyList.insertBefore(listItem, historyList.firstChild);
+            
+            // Keep only the last 10 names
+            while (historyList.children.length > 10) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+
+        // Generate a name when the page loads
+        generateName();
+    </script>
+</body>
+</html>
